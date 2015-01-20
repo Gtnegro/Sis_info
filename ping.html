@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		#myChart {
+			width:800px;
+			height:800px;
+		}
+	</style>
+</head>
+<body>
+	<div>
+		<input type="text" id="address" placeholder="Address">
+		<input type="text" id="count" placeholder="Count">
+		<input type="text" id="size" placeholder="Size">
+		<button>Execute</button>
+	</div>
+	<canvas id="myChart"></canvas>
+
+	<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+	<script src="Chart.min.js"></script>
+	<script>
+		$('button').click(function(){
+			url = 'ping.php?address='+$('#address').val()+'&count='+$('#count').val()+'&size='+$('#size').val();
+			$.getJSON(url, function(ping){
+				console.log(ping);
+				console.log(ping['times']);
+				drawChart(ping['times']);
+			})
+		});
+		function drawChart(times){
+					var labelsValue = []
+					for(var index in times)
+						labelsValue.push(Number(index).toString());
+					var data = {
+						labels: labelsValue, datasets: [
+			        {
+			          label: "My First dataset",
+			          fillColor: "rgba(220,220,220,0.2)",
+			          strokeColor: "rgba(220,220,220,1)",
+			          pointColor: "rgba(220,220,220,1)",
+			          pointStrokeColor: "red",
+			          pointHighlightFill: "yellow",
+			          pointHighlightStroke: "rgba(220,220,220,1)",
+			          data: times
+			        }
+			      ]
+					};
+					var ctx = document.getElementById("myChart").getContext("2d");
+					var myNewChart = new Chart(ctx).Line(data);
+		}
+	</script>
+</body>
+</html>
